@@ -5,7 +5,7 @@ import { addPackageDependency } from "~/utils/addPackageDependency.js";
 import { type AvailablePackages } from "~/installers/index.js";
 import { PKG_ROOT } from "~/consts.js";
 
-export const firebaseAuthInstaller: Installer = ({ projectDir, packages }) => {
+export const firebaseAuthInstaller: Installer = ({ projectDir, appRouter }) => {
   addPackageDependency({
     projectDir,
     dependencies: [
@@ -26,7 +26,7 @@ export const firebaseAuthInstaller: Installer = ({ projectDir, packages }) => {
   });
 
   const extrasDir = path.join(PKG_ROOT, "template/extras");
-  const isAppRouter = packages?.includes("appRouter" as AvailablePackages);
+  const isAppRouter = appRouter;
 
   // Copy auth context and hooks
   const authContextSrc = path.join(
@@ -60,7 +60,7 @@ export const firebaseAuthInstaller: Installer = ({ projectDir, packages }) => {
     "src/server/auth.ts"
   );
 
-  // Copy auth middleware (for app router)
+  // Copy auth middleware (for app router) if it exists
   if (isAppRouter) {
     const middlewareSrc = path.join(
       extrasDir,
@@ -71,49 +71,31 @@ export const firebaseAuthInstaller: Installer = ({ projectDir, packages }) => {
       projectDir,
       "src/middleware.ts"
     );
-    fs.copySync(middlewareSrc, middlewareDest);
+    if (fs.existsSync(middlewareSrc)) {
+      fs.copySync(middlewareSrc, middlewareDest);
+    }
   }
 
-  // Copy auth API routes
-  if (!isAppRouter) {
-    const authApiSrc = path.join(
-      extrasDir,
-      "src/pages/api/auth",
-      "[...auth].ts"
-    );
-    const authApiDest = path.join(
-      projectDir,
-      "src/pages/api/auth/[...auth].ts"
-    );
-    fs.ensureDirSync(path.dirname(authApiDest));
-    fs.copySync(authApiSrc, authApiDest);
-  } else {
-    // App Router auth route
-    const authRouteSrc = path.join(
-      extrasDir,
-      "src/app/api/auth",
-      "[...auth]",
-      "route.ts"
-    );
-    const authRouteDest = path.join(
-      projectDir,
-      "src/app/api/auth/[...auth]/route.ts"
-    );
-    fs.ensureDirSync(path.dirname(authRouteDest));
-    fs.copySync(authRouteSrc, authRouteDest);
-  }
+  // Note: Firebase Auth doesn't require API routes like NextAuth
+  // Authentication is handled directly through Firebase SDK
 
   // Ensure directories exist
   fs.ensureDirSync(path.dirname(authContextDest));
   fs.ensureDirSync(path.dirname(useAuthDest));
   fs.ensureDirSync(path.dirname(authUtilsDest));
 
-  // Copy files
-  fs.copySync(authContextSrc, authContextDest);
-  fs.copySync(useAuthSrc, useAuthDest);
-  fs.copySync(authUtilsSrc, authUtilsDest);
+  // Copy files if they exist
+  if (fs.existsSync(authContextSrc)) {
+    fs.copySync(authContextSrc, authContextDest);
+  }
+  if (fs.existsSync(useAuthSrc)) {
+    fs.copySync(useAuthSrc, useAuthDest);
+  }
+  if (fs.existsSync(authUtilsSrc)) {
+    fs.copySync(authUtilsSrc, authUtilsDest);
+  }
 
-  // Copy login/signup components
+  // Copy login/signup components if they exist
   const authComponentsSrc = path.join(
     extrasDir,
     "src/components/auth"
@@ -122,6 +104,8 @@ export const firebaseAuthInstaller: Installer = ({ projectDir, packages }) => {
     projectDir,
     "src/components/auth"
   );
-  fs.ensureDirSync(authComponentsDest);
-  fs.copySync(authComponentsSrc, authComponentsDest);
+  if (fs.existsSync(authComponentsSrc)) {
+    fs.ensureDirSync(authComponentsDest);
+    fs.copySync(authComponentsSrc, authComponentsDest);
+  }
 };

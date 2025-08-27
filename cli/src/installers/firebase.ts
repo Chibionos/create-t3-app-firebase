@@ -6,7 +6,7 @@ import { addPackageScript } from "~/utils/addPackageScript.js";
 import { type AvailablePackages } from "~/installers/index.js";
 import { PKG_ROOT } from "~/consts.js";
 
-export const firebaseInstaller: Installer = ({ projectDir, packages }) => {
+export const firebaseInstaller: Installer = ({ projectDir, packages, appRouter }) => {
   addPackageDependency({
     projectDir,
     dependencies: [
@@ -54,7 +54,7 @@ export const firebaseInstaller: Installer = ({ projectDir, packages }) => {
   const firebaseAdminSrc = path.join(
     extrasDir,
     "src/server/firebase",
-    packages?.includes("appRouter" as AvailablePackages) 
+    appRouter
       ? "firebase-admin-app.ts"
       : "firebase-admin.ts"
   );
@@ -66,7 +66,7 @@ export const firebaseInstaller: Installer = ({ projectDir, packages }) => {
   const firebaseClientSrc = path.join(
     extrasDir,
     "src/lib/firebase",
-    packages?.includes("appRouter" as AvailablePackages)
+    appRouter
       ? "firebase-client-app.ts"
       : "firebase-client.ts"
   );
@@ -75,15 +75,23 @@ export const firebaseInstaller: Installer = ({ projectDir, packages }) => {
     "src/lib/firebase.ts"
   );
 
-  // Copy Firebase configuration files
-  fs.copySync(firebaseConfigSrc, firebaseConfigDest);
-  fs.copySync(firebaseRcSrc, firebaseRcDest);
+  // Copy Firebase configuration files if they exist
+  if (fs.existsSync(firebaseConfigSrc)) {
+    fs.copySync(firebaseConfigSrc, firebaseConfigDest);
+  }
+  if (fs.existsSync(firebaseRcSrc)) {
+    fs.copySync(firebaseRcSrc, firebaseRcDest);
+  }
   
   // Ensure directories exist
   fs.ensureDirSync(path.dirname(firebaseAdminDest));
   fs.ensureDirSync(path.dirname(firebaseClientDest));
   
-  // Copy Firebase SDK files
-  fs.copySync(firebaseAdminSrc, firebaseAdminDest);
-  fs.copySync(firebaseClientSrc, firebaseClientDest);
+  // Copy Firebase SDK files if they exist
+  if (fs.existsSync(firebaseAdminSrc)) {
+    fs.copySync(firebaseAdminSrc, firebaseAdminDest);
+  }
+  if (fs.existsSync(firebaseClientSrc)) {
+    fs.copySync(firebaseClientSrc, firebaseClientDest);
+  }
 };

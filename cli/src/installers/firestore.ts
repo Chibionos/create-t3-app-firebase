@@ -5,12 +5,12 @@ import { addPackageDependency } from "~/utils/addPackageDependency.js";
 import { type AvailablePackages } from "~/installers/index.js";
 import { PKG_ROOT } from "~/consts.js";
 
-export const firestoreInstaller: Installer = ({ projectDir, packages }) => {
+export const firestoreInstaller: Installer = ({ projectDir, appRouter }) => {
   // Firebase packages are added by the main firebase installer
   // This installer focuses on Firestore-specific setup
 
   const extrasDir = path.join(PKG_ROOT, "template/extras");
-  const isAppRouter = packages?.includes("appRouter" as AvailablePackages);
+  const isAppRouter = appRouter;
 
   // Copy Firestore database configuration
   const dbConfigSrc = path.join(
@@ -62,27 +62,39 @@ export const firestoreInstaller: Installer = ({ projectDir, packages }) => {
   fs.ensureDirSync(path.dirname(utilsDest));
   fs.ensureDirSync(path.dirname(collectionsDest));
 
-  // Copy files
-  fs.copySync(dbConfigSrc, dbConfigDest);
-  fs.copySync(typesSrc, typesDest);
-  fs.copySync(utilsSrc, utilsDest);
-  fs.copySync(collectionsSrc, collectionsDest);
+  // Copy files if they exist
+  if (fs.existsSync(dbConfigSrc)) {
+    fs.copySync(dbConfigSrc, dbConfigDest);
+  }
+  if (fs.existsSync(typesSrc)) {
+    fs.copySync(typesSrc, typesDest);
+  }
+  if (fs.existsSync(utilsSrc)) {
+    fs.copySync(utilsSrc, utilsDest);
+  }
+  if (fs.existsSync(collectionsSrc)) {
+    fs.copySync(collectionsSrc, collectionsDest);
+  }
 
-  // Add Firestore rules file
+  // Add Firestore rules file if it exists
   const rulesTemplateSrc = path.join(
     extrasDir,
     "config",
     "firestore.rules"
   );
   const rulesTemplateDest = path.join(projectDir, "firestore.rules");
-  fs.copySync(rulesTemplateSrc, rulesTemplateDest);
+  if (fs.existsSync(rulesTemplateSrc)) {
+    fs.copySync(rulesTemplateSrc, rulesTemplateDest);
+  }
 
-  // Add Firestore indexes file
+  // Add Firestore indexes file if it exists
   const indexesSrc = path.join(
     extrasDir,
     "config",
     "firestore.indexes.json"
   );
   const indexesDest = path.join(projectDir, "firestore.indexes.json");
-  fs.copySync(indexesSrc, indexesDest);
+  if (fs.existsSync(indexesSrc)) {
+    fs.copySync(indexesSrc, indexesDest);
+  }
 };
