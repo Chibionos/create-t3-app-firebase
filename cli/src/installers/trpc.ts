@@ -23,6 +23,7 @@ export const trpcInstaller: Installer = ({
   });
 
   const usingAuth = packages?.nextAuth.inUse;
+  const usingFirebase = packages?.firebase.inUse || packages?.firebaseAuth.inUse || packages?.firestore.inUse;
   const usingPrisma = packages?.prisma.inUse;
   const usingDrizzle = packages?.drizzle.inUse;
   const usingDb = usingPrisma === true || usingDrizzle === true;
@@ -36,27 +37,31 @@ export const trpcInstaller: Installer = ({
   const apiHandlerSrc = path.join(extrasDir, srcToUse);
   const apiHandlerDest = path.join(projectDir, srcToUse);
 
-  const trpcFile =
-    usingAuth && usingDb
+  const trpcFile = usingFirebase
+    ? "trpc-firebase.ts"
+    : usingAuth && usingDb
       ? "with-auth-db.ts"
       : usingAuth
         ? "with-auth.ts"
         : usingDb
           ? "with-db.ts"
           : "base.ts";
-  const trpcSrc = path.join(
-    extrasDir,
-    "src/server/api",
-    appRouter ? "trpc-app" : "trpc-pages",
-    trpcFile
-  );
+  const trpcSrc = usingFirebase
+    ? path.join(extrasDir, "src/server/api", trpcFile)
+    : path.join(
+        extrasDir,
+        "src/server/api",
+        appRouter ? "trpc-app" : "trpc-pages",
+        trpcFile
+      );
   const trpcDest = path.join(projectDir, "src/server/api/trpc.ts");
 
   const rootRouterSrc = path.join(extrasDir, "src/server/api/root.ts");
   const rootRouterDest = path.join(projectDir, "src/server/api/root.ts");
 
-  const exampleRouterFile =
-    usingAuth && usingPrisma
+  const exampleRouterFile = usingFirebase
+    ? "post-firebase.ts"
+    : usingAuth && usingPrisma
       ? "with-auth-prisma.ts"
       : usingAuth && usingDrizzle
         ? "with-auth-drizzle.ts"
@@ -68,11 +73,13 @@ export const trpcInstaller: Installer = ({
               ? "with-drizzle.ts"
               : "base.ts";
 
-  const exampleRouterSrc = path.join(
-    extrasDir,
-    "src/server/api/routers/post",
-    exampleRouterFile
-  );
+  const exampleRouterSrc = usingFirebase
+    ? path.join(extrasDir, "src/server/api/routers", exampleRouterFile)
+    : path.join(
+        extrasDir,
+        "src/server/api/routers/post",
+        exampleRouterFile
+      );
   const exampleRouterDest = path.join(
     projectDir,
     "src/server/api/routers/post.ts"
@@ -122,7 +129,9 @@ export const trpcInstaller: Installer = ({
       projectDir,
     });
 
-    const utilsSrc = path.join(extrasDir, "src/utils/api.ts");
+    const utilsSrc = usingFirebase 
+      ? path.join(extrasDir, "src/utils/api-firebase.ts")
+      : path.join(extrasDir, "src/utils/api.ts");
     const utilsDest = path.join(projectDir, "src/utils/api.ts");
     copySrcDest.push([utilsSrc, utilsDest]);
   }

@@ -32,6 +32,8 @@ export const firebaseInstaller: Installer = ({ projectDir, packages, appRouter }
       "firebase:serve": "firebase serve",
       "firebase:emulators": "firebase emulators:start",
       "firebase:init": "firebase init",
+      "firebase:login": "firebase login",
+      "firebase:setup": "firebase use --add && firebase init firestore && firebase init hosting",
     },
   });
 

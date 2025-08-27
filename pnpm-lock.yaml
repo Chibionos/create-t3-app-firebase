@@ -92,6 +92,9 @@ importers:
       sort-package-json:
         specifier: ^2.10.0
         version: 2.10.0
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@auth/drizzle-adapter':
         specifier: ^1.1.0
@@ -189,9 +192,6 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
-      zod:
-        specifier: ^3.24.2
-        version: 3.24.2
 
   www:
     dependencies:

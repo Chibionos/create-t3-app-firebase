@@ -21,6 +21,7 @@ import {
   getNpmVersion,
   renderVersionWarning,
 } from "./utils/renderVersionWarning.js";
+import { collectFirebaseConfig, writeFirebaseConfig } from "./helpers/firebaseConfig.js";
 
 type CT3APackageJSON = PackageJson & {
   ct3aMetadata?: {
@@ -80,6 +81,12 @@ const main = async () => {
   // update import alias in any generated files if not using the default
   if (importAlias !== "~/") {
     setImportAlias(projectDir, importAlias);
+  }
+
+  // Collect Firebase configuration if using Firebase
+  if (packages.includes("firebase") || packages.includes("firebaseAuth") || packages.includes("firestore")) {
+    const { clientConfig, adminConfig } = await collectFirebaseConfig();
+    writeFirebaseConfig(projectDir, clientConfig, adminConfig);
   }
 
   if (!noInstall) {
