@@ -1,7 +1,7 @@
 {
-  "name": "@ct3a/root",
-  "version": "0.0.0",
-  "description": "Quickest way to start a new web app with full stack typesafety",
+  "name": "@create-t3-fire/root",
+  "version": "1.0.0",
+  "description": "Quickest way to start a new web app with full stack typesafety and Firebase",
   "author": "Shoubhit Dash <shoubhit2005@gmail.com> (https://nexxel.dev)",
   "maintainers": [
     "Julius Marminge <julius0216@outlook.com> (https://jumr.dev)"
@@ -10,11 +10,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/t3-oss/create-t3-app.git"
+    "url": "https://github.com/Chibionos/create-t3-app-firebase.git"
   },
   "keywords": [
-    "create-t3-app",
-    "init.tips",
+    "create-t3-fire",
+    "firebase",
+    "firestore",
     "next.js",
     "t3-stack",
     "tailwind",
@@ -27,12 +28,12 @@
   "packageManager": "pnpm@10.8.0",
   "scripts": {
     "typecheck": "turbo typecheck",
-    "build:cli": "turbo --filter=create-t3-app build",
+    "build:cli": "turbo --filter=create-t3-fire build",
     "build:www": "turbo --filter=www build",
     "build": "turbo build",
-    "start:cli": "turbo --filter=create-t3-app start",
+    "start:cli": "turbo --filter=create-t3-fire start",
     "start:www": "turbo --filter=www start",
-    "dev:cli": "turbo --filter=create-t3-app dev",
+    "dev:cli": "turbo --filter=create-t3-fire dev",
     "dev:www": "turbo --filter=www dev",
     "clean": "turbo clean && rm -rf node_modules",
     "lint": "turbo lint && manypkg check",

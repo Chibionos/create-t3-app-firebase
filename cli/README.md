@@ -6,15 +6,15 @@
 </p>
 
 <h1 align="center">
-  create-t3-app
+  create-t3-fire
 </h1>
 
 <p align="center">
-  Interactive CLI to start a full-stack, typesafe Next.js app.
+  Interactive CLI to start a full-stack, typesafe Next.js app with Firebase.
 </p>
 
 <p align="center">
-  Get started with the <a rel="noopener noreferrer" target="_blank" href="https://init.tips">T3 Stack</a> by running <code>npm create t3-app@latest</code>
+  Get started with the <a rel="noopener noreferrer" target="_blank" href="https://init.tips">T3 Stack + Firebase</a> by running <code>npm create t3-fire@latest</code>
 </p>
 
 <div align="center">
@@ -57,9 +57,9 @@ This Firebase-integrated version includes:
 - [Firebase Hosting](https://firebase.google.com/docs/hosting)
 - [Drizzle](https://orm.drizzle.team) (optional alternative)
 
-### So... what is `create-t3-app`? A template?
+### So... what is `create-t3-fire`? A template?
 
-Kind of? `create-t3-app` is a CLI built by seasoned T3 Stack devs to streamline the setup of a modular T3 Stack app. This means each piece is optional, and the "template" is generated based on your specific needs.
+Kind of? `create-t3-fire` is a CLI built from the original create-t3-app, enhanced with Firebase integration to streamline the setup of a modular T3 Stack app with Firebase services. This means each piece is optional, and the "template" is generated based on your specific needs.
 
 After countless projects and many years on this tech, we have lots of opinions and insights. We’ve done our best to encode them into this CLI.
 
@@ -71,7 +71,7 @@ We'll be frank - this is an _opinionated project_. We share a handful of core be
 
 ### 1. Solve Problems
 
-It's easy to fall into the trap of "adding everything" - we explicitly _don't_ want to do that. Everything added to `create-t3-app` should solve a _specific_ problem that exists within the core technologies included. This means we **won't** add things like state libraries (`zustand`, `redux`) but we **will** add things like Firebase Auth and integrate Firestore and tRPC for you.
+It's easy to fall into the trap of "adding everything" - we explicitly _don't_ want to do that. Everything added to `create-t3-fire` should solve a _specific_ problem that exists within the core technologies included. This means we **won't** add things like state libraries (`zustand`, `redux`) but we **will** add things like Firebase Auth and integrate Firestore and tRPC for you.
 
 ### 2. Bleed Responsibly
 
@@ -79,41 +79,41 @@ We love our bleeding edge tech. The amount of speed and, honestly, _fun_ that co
 
 ### 3. Typesafety Isn't Optional
 
-The stated goal of `create-t3-app` is to provide the quickest way to start a new full-stack, typesafe web application. We take typesafety seriously in these parts as it improves our productivity and helps us ship fewer bugs. Any decision that compromises the typesafe nature of `create-t3-app` is a decision that should be made in a different project.
+The stated goal of `create-t3-fire` is to provide the quickest way to start a new full-stack, typesafe web application with Firebase integration. We take typesafety seriously in these parts as it improves our productivity and helps us ship fewer bugs. Any decision that compromises the typesafe nature of `create-t3-fire` is a decision that should be made in a different project.
 
 <h2 id="getting-started">Getting Started</h2>
 
-To scaffold an app using `create-t3-app`, run any of the following four commands and answer the command prompt questions:
+To scaffold an app using `create-t3-fire`, run any of the following four commands and answer the command prompt questions:
 
 ### npm
 
 ```bash
-npm create t3-app@latest
+npm create t3-fire@latest
 ```
 
 ### yarn
 
 ```bash
-yarn create t3-app
+yarn create t3-fire
 ```
 
 ### pnpm
 
 ```bash
-pnpm create t3-app@latest
+pnpm create t3-fire@latest
 ```
 
 ### bun
 
 ```bash
-bun create t3-app@latest
+bun create t3-fire@latest
 ```
 
 For more advanced usage, check out the [CLI docs](https://create.t3.gg/en/installation).
 
 <h2 id="community">Community</h2>
 
-For help, discussion about best practices, or any other conversation that would benefit create-t3-app:
+For help, discussion about best practices, or any other conversation that would benefit create-t3-fire:
 
 [Join the T3 Discord Server](https://t3.gg/discord)
 

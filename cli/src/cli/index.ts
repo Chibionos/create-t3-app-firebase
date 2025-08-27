@@ -77,7 +77,7 @@ export const runCli = async (): Promise<CliResults> => {
 
   const program = new Command()
     .name(CREATE_T3_APP)
-    .description("A CLI for creating web applications with the t3 stack")
+    .description("A CLI for creating web applications with the T3 stack and Firebase")
     .argument(
       "[dir]",
       "The name of the application, as well as the name of the directory to create"
