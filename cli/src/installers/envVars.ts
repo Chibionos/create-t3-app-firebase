@@ -12,14 +12,20 @@ export const envVariablesInstaller: Installer = ({
   scopedAppName,
 }) => {
   const usingAuth = packages?.nextAuth.inUse;
+  const usingFirebase = packages?.firebase.inUse;
+  const usingFirebaseAuth = packages?.firebaseAuth.inUse;
+  const usingFirestore = packages?.firestore.inUse;
   const usingPrisma = packages?.prisma.inUse;
   const usingDrizzle = packages?.drizzle.inUse;
 
-  const usingDb = usingPrisma === true || usingDrizzle === true;
+  const usingDb = usingPrisma === true || usingDrizzle === true || usingFirestore === true;
   const usingPlanetScale = databaseProvider === "planetscale";
 
   const envContent = getEnvContent(
     !!usingAuth,
+    !!usingFirebase,
+    !!usingFirebaseAuth,
+    !!usingFirestore,
     !!usingPrisma,
     !!usingDrizzle,
     databaseProvider,
@@ -27,7 +33,10 @@ export const envVariablesInstaller: Installer = ({
   );
 
   let envFile = "";
-  if (usingDb) {
+  if (usingFirebase || usingFirebaseAuth || usingFirestore) {
+    if (usingAuth || usingFirebaseAuth) envFile = "with-firebase-auth.js";
+    else envFile = "with-firebase.js";
+  } else if (usingDb) {
     if (usingPlanetScale) {
       if (usingAuth) envFile = "with-auth-db-planetscale.js";
       else envFile = "with-db-planetscale.js";
@@ -69,6 +78,9 @@ export const envVariablesInstaller: Installer = ({
 
 const getEnvContent = (
   usingAuth: boolean,
+  usingFirebase: boolean,
+  usingFirebaseAuth: boolean,
+  usingFirestore: boolean,
   usingPrisma: boolean,
   usingDrizzle: boolean,
   databaseProvider: DatabaseProvider,
@@ -80,6 +92,24 @@ const getEnvContent = (
 `
     .trim()
     .concat("\n");
+
+  if (usingFirebase || usingFirebaseAuth || usingFirestore)
+    content += `
+# Firebase Configuration
+# Get these values from your Firebase Console project settings
+NEXT_PUBLIC_FIREBASE_API_KEY=""
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=""
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=""
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=""
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=""
+NEXT_PUBLIC_FIREBASE_APP_ID=""
+
+# Firebase Admin SDK (for server-side operations)
+# Download service account key from Firebase Console > Project Settings > Service Accounts
+FIREBASE_PROJECT_ID=""
+FIREBASE_CLIENT_EMAIL=""
+FIREBASE_PRIVATE_KEY=""
+`;
 
   if (usingAuth)
     content += `
@@ -122,7 +152,7 @@ DATABASE_URL='mysql://YOUR_MYSQL_URL_HERE?sslaccept=strict'`;
     content += "\n";
   }
 
-  if (!usingAuth && !usingPrisma)
+  if (!usingAuth && !usingPrisma && !usingFirebase && !usingFirebaseAuth && !usingFirestore)
     content += `
 # Example:
 # SERVERVAR="foo"

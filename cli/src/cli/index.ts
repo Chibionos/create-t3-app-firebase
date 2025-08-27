@@ -52,7 +52,7 @@ interface CliResults {
 
 const defaultOptions: CliResults = {
   appName: DEFAULT_APP_NAME,
-  packages: ["nextAuth", "prisma", "tailwind", "trpc", "eslint"],
+  packages: ["firebaseAuth", "firestore", "firebase", "tailwind", "trpc", "eslint"],
   flags: {
     noGit: false,
     noInstall: false,
@@ -65,11 +65,11 @@ const defaultOptions: CliResults = {
     nextAuth: false,
     importAlias: "~/",
     appRouter: false,
-    dbProvider: "sqlite",
+    dbProvider: "firebase",
     eslint: false,
     biome: false,
   },
-  databaseProvider: "sqlite",
+  databaseProvider: "firebase",
 };
 
 export const runCli = async (): Promise<CliResults> => {
@@ -285,6 +285,7 @@ export const runCli = async (): Promise<CliResults> => {
             message: "What authentication provider would you like to use?",
             options: [
               { value: "none", label: "None" },
+              { value: "firebase", label: "Firebase Auth" },
               { value: "next-auth", label: "NextAuth.js" },
               // Maybe later
               // { value: "clerk", label: "Clerk" },
@@ -294,9 +295,10 @@ export const runCli = async (): Promise<CliResults> => {
         },
         database: () => {
           return p.select({
-            message: "What database ORM would you like to use?",
+            message: "What database would you like to use?",
             options: [
               { value: "none", label: "None" },
+              { value: "firebase", label: "Firebase Firestore" },
               { value: "prisma", label: "Prisma" },
               { value: "drizzle", label: "Drizzle" },
             ],
@@ -311,6 +313,7 @@ export const runCli = async (): Promise<CliResults> => {
         },
         databaseProvider: ({ results }) => {
           if (results.database === "none") return;
+          if (results.database === "firebase") return "firebase";
           return p.select({
             message: "What database provider would you like to use?",
             options: [
@@ -372,8 +375,16 @@ export const runCli = async (): Promise<CliResults> => {
     if (project.styling) packages.push("tailwind");
     if (project.trpc) packages.push("trpc");
     if (project.authentication === "next-auth") packages.push("nextAuth");
+    if (project.authentication === "firebase") packages.push("firebaseAuth");
     if (project.database === "prisma") packages.push("prisma");
     if (project.database === "drizzle") packages.push("drizzle");
+    if (project.database === "firebase") {
+      packages.push("firestore");
+      packages.push("firebase");
+      if (project.authentication !== "firebase") {
+        packages.push("firebaseAuth");
+      }
+    }
     if (project.linter === "eslint") packages.push("eslint");
     if (project.linter === "biome") packages.push("biome");
 

@@ -3,7 +3,15 @@
  * This improves performance significantly over fetching it from the npm registry.
  */
 export const dependencyVersionMap = {
-  // NextAuth.js
+  // Firebase
+  firebase: "^10.15.0",
+  "firebase-admin": "^12.8.0",
+  "firebase-tools": "^13.29.0",
+  "cookies-next": "^5.0.0",
+  jsonwebtoken: "^9.0.2",
+  "@types/jsonwebtoken": "^9.0.8",
+
+  // NextAuth.js (keeping for compatibility)
   "next-auth": "5.0.0-beta.25",
   "@auth/prisma-adapter": "^2.7.2",
   "@auth/drizzle-adapter": "^1.7.2",

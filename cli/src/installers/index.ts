@@ -8,13 +8,19 @@ import { biomeInstaller } from "./biome.js";
 import { dbContainerInstaller } from "./dbContainer.js";
 import { drizzleInstaller } from "./drizzle.js";
 import { dynamicEslintInstaller } from "./eslint.js";
+import { firebaseInstaller } from "./firebase.js";
+import { firebaseAuthInstaller } from "./firebaseAuth.js";
+import { firestoreInstaller } from "./firestore.js";
 
 // Turning this into a const allows the list to be iterated over for programmatically creating prompt options
 // Should increase extensibility in the future
 export const availablePackages = [
   "nextAuth",
+  "firebaseAuth",
   "prisma",
   "drizzle",
+  "firestore",
+  "firebase",
   "tailwind",
   "trpc",
   "envVariables",
@@ -29,6 +35,7 @@ export const databaseProviders = [
   "postgres",
   "sqlite",
   "planetscale",
+  "firebase",
 ] as const;
 export type DatabaseProvider = (typeof databaseProviders)[number];
 
@@ -58,16 +65,28 @@ export const buildPkgInstallerMap = (
   databaseProvider: DatabaseProvider
 ): PkgInstallerMap => ({
   nextAuth: {
-    inUse: packages.includes("nextAuth"),
+    inUse: packages.includes("nextAuth") && databaseProvider !== "firebase",
     installer: nextAuthInstaller,
   },
+  firebaseAuth: {
+    inUse: packages.includes("firebaseAuth") || databaseProvider === "firebase",
+    installer: firebaseAuthInstaller,
+  },
   prisma: {
-    inUse: packages.includes("prisma"),
+    inUse: packages.includes("prisma") && databaseProvider !== "firebase",
     installer: prismaInstaller,
   },
   drizzle: {
-    inUse: packages.includes("drizzle"),
+    inUse: packages.includes("drizzle") && databaseProvider !== "firebase",
     installer: drizzleInstaller,
+  },
+  firestore: {
+    inUse: packages.includes("firestore") || databaseProvider === "firebase",
+    installer: firestoreInstaller,
+  },
+  firebase: {
+    inUse: packages.includes("firebase") || packages.includes("firebaseAuth") || packages.includes("firestore") || databaseProvider === "firebase",
+    installer: firebaseInstaller,
   },
   tailwind: {
     inUse: packages.includes("tailwind"),
